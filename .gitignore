@@ -9,4 +9,4 @@ wheels/
 # Virtual environments
 .venv
 
-revision
+# revision/path_query_revise.py
