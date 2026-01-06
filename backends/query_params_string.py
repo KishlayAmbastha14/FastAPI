@@ -41,3 +41,31 @@ async def readding4(q:Annotated[Union[str,None],
   if q:
     results.update({"q":q})
   return results
+
+
+@app.get("/items5")
+async def reading5(hidden_querys:Annotated[str|None,Query(include_in_schema=False)] = None,):
+  results = {"items":[{"items_name":"rohan"},{"item_id":"455"}]}
+
+  if hidden_querys:
+    results.update({"hidden_query":hidden_querys})
+  else:
+    results.update({"hidden":"not found"})
+
+  return results
+
+
+# 🟡 INTERMEDIATE LEVEL (Real API Thinking)
+# Q5. Write an API that:
+# Accepts search query
+# Minimum length = 3
+# Maximum length = 20
+# Optional
+
+@app.get("/api1")
+async def calling(search:Annotated[str|None,Query(min_length=3,max_length=20)] = None):
+  results = {"items":[{"items_id":"rohan","items_store":"papaya"}]}
+
+  if search:
+    results.update({"search_Input":search})
+  return results
