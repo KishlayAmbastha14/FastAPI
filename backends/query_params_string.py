@@ -1,6 +1,7 @@
 from fastapi import FastAPI,HTTPException,Query
 from pydantic import BaseModel
-from typing import List,Union,Annotated
+from typing import List,Union,Annotated,Optional
+from enum import Enum
 
 app = FastAPI()
 
@@ -69,3 +70,58 @@ async def calling(search:Annotated[str|None,Query(min_length=3,max_length=20)] =
   if search:
     results.update({"search_Input":search})
   return results
+
+
+
+# 🔹 Task 1
+# Create an endpoint /users:
+# name: required, min length 3
+# role: optional, only "admin" or "user"\
+
+class Role(str,Enum):
+  admin = "admin"
+  user = "user"
+
+
+@app.get("/users")
+async def userfind(name:Annotated[str,Query(min_length=3)],
+                   role:Optional[Role] = None):
+  # return {"name": name, "role": role}
+  
+  items = {"item_No":"hloo"}    
+
+  if name:
+    # items.update(name,)
+    items = {"items_name":name,**items.model_dump()}
+    if role == "user":
+      # items.update(role)
+      items = {"items_name":role,**items.model_dump()}
+
+  #   else:
+  #     items.update(role)
+
+
+# 🔹 Task 2
+
+# Create /products:
+
+# price: optional, must be ≥ 100
+
+# category: optional, alias = cat
+
+@app.get("/products")
+async def productfind(price:Optional[int]):
+  items = {"item":[{"item_name":"rohan","item_id":34}]}
+
+  if price > 100:
+    items.update({"price is ":price})
+  return items
+
+
+# 🔹 Task 3
+
+# Create /search:
+
+# q: optional
+
+# Should reject special characters using regex
