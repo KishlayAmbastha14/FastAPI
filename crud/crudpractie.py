@@ -34,6 +34,13 @@ class stud_data(BaseModel):
     course: str 
     email: str
 
+# PATCH -- partial updte hoga iha to hame optional dena hoga
+class update_stud_data(BaseModel):
+  name:Optional[str] = None
+  age:Optional[int] = None
+  course:Optional[str] = None
+  email:Optional[str] = None
+
 
 # @app.get("/stud",response_model=List[stud_data])
 @app.get("/stud",response_model=Dict[str,stud_data])
@@ -86,3 +93,20 @@ async def getting_stu(stud_id:Annotated[int,Path(title="provide me id")]):
   if student_id in data:
     return data[student_id]
   raise HTTPException(status_code = 404, detail="sorry this is not present")
+
+
+@app.patch("/stud_update/{stud_id}")
+async def updating_student(stud_id:Annotated[int,Path(title="provide me id to update")],update_data:update_stud_data):
+  for student in student_datas:
+    if student['idss'] == stud_id:
+      if update_data.name is not None:
+        student['name'] = update_data.name
+      if update_data.age is not None:
+        student['age']  = update_data.age
+      if update_data.course is not None: 
+        student['course'] = update_data.course
+      if update_data.email is not None:
+        student['email']  = update_data.email
+      return student
+  
+    raise HTTPException(status_code=404, detail="Student not found")
