@@ -110,11 +110,16 @@ async def userfind(name:Annotated[str,Query(min_length=3)],
 # category: optional, alias = cat
 
 @app.get("/products")
-async def productfind(price:Optional[int]):
+async def productfind(price:Annotated[Optional[int],Query(ge=100)] = None,
+                      category: Annotated[Optional[int],Query(alias="cat")] = None):
   items = {"item":[{"item_name":"rohan","item_id":34}]}
 
-  if price > 100:
-    items.update({"price is ":price})
+  if price is not None:
+    items["price"] = price
+
+  if category is not None:
+    items["category"] = category
+
   return items
 
 

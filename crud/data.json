@@ -1,0 +1,30 @@
+{
+  "1": {
+    "idss": 1,
+    "name": "Kishlay",
+    "age": 22,
+    "course": "AI",
+    "email": "kishlay@gmail.com"
+  },
+  "2": {
+    "idss": 2,
+    "name": "Rohan",
+    "age": 21,
+    "course": "Data Science",
+    "email": "rohan@gmail.com"
+  },
+  "3": {
+    "idss": 3,
+    "name": "Aman",
+    "age": 23,
+    "course": "Big Data",
+    "email": "aman@gmail.com"
+  },
+  "4": {
+    "idss": 4,
+    "name": "Rahul",
+    "age": 20,
+    "course": "Web Development",
+    "email": "rahul@gmail.com"
+  }
+}

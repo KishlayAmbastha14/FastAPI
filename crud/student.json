@@ -1,0 +1,16 @@
+[
+{
+    "idss": 1,
+    "name": "Rahul",
+    "age": 20,
+    "course": "Web Development",
+    "email": "rahul@gmail.com"
+  },
+  {
+    "idss": 2,
+    "name": "Rahul",
+    "age": 20,
+    "course": "Web Development",
+    "email": "rahul@gmail.com"
+  }
+]
