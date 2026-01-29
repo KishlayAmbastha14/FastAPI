@@ -5,7 +5,7 @@ class UserCreate(BaseModel):
   password : str
 
 class UserResponse(BaseModel):
-  ids : int
+  id : int
   email : EmailStr
 
   class Config:
@@ -16,3 +16,10 @@ class Login_user(BaseModel):
   password: str
 
 
+class delete_user(BaseModel):
+  id : int
+  # email : str
+
+class DeleteResponse(BaseModel):
+  message: str
+  delete_user_id : int 

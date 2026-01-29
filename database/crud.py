@@ -25,14 +25,36 @@ def get_users(db:Session):
   return db.query(models.User).all()
 
 
-def login_user(db, email:str,password:str):
-  user = db.query(User).filter(User.email == email).first()
 
-  if not user:
-    return False
-  if not verify_password(password,user.password):
-    return False
-  return True
+try: 
+  def login_user(db:Session,user:schemas.Login_user):
+
+    db_user = db.query(User).filter(User.email == user.email).first()
+    # password = db.query(User).filter(user.password)
+    if not db_user:
+      return False
+    if not verify_password(user.password,db_user.password):
+      return False
+  
+    # return {"message": "you have given correct information"}
+    
+except Exception as e:
+  print(e)
+
+try:
+  def delete_user(db:Session, user_id:int):
+    db_user_delete = db.query(User).filter(User.id == user_id).first()
+    if not db_user_delete:
+      return {'message' : "sorry this user is not there "}
+    
+    db.delete(db_user_delete)
+
+    db.commit()
+    # print(db_user_delete)
+    return db_user_delete
+except Exception as e:
+  print(e)
+
 
 # def login_user(db:Session,user:schemas.UserCreate):
 #   new_user = models.User(
