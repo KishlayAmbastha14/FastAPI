@@ -32,6 +32,8 @@ async def particular_stu(id:int=Path(ge=0,le=100,description="provide me student
   for stu in db:
     if stu.id == id:
       return stu
+    else: 
+      return {"message":"no student_with this id is present"}
 
 ## ------------- POST -----------
 @student_router.post("/create",response_model = StudentCreated,tags=['CREATE'])
@@ -39,24 +41,22 @@ async def posting_stud(student1:StudentsData) -> StudentCreated:
   db.append(student1)
   return StudentCreated(student=student1,msg="Student inserted")
 
-# @student_router.get("/total_students/{ids}")
-# async def get_particular_students(ids:Annotated[int,Path(title="enter the integer number",ge=1,le=7)]):
-#   student_id = str(ids)
-#   if student_id not in data:
-#     raise HTTPException(status_code=404,detail="no data is found")
-#   return data[student_id]
 
+@student_router.put("/update/{stu_id}",response_model = update_stud_data,tags=['UPDATE'])
+try:
+  async def updating_stud(stud_id:int,stud:StudentsData) -> update_stud_data:
+    for i in db:
+      if i.id == stud.id:
+        i.name = stud.name
+        i.age = stud.age
+        i.course = stud.course
+        i.email = stud.email
+        return StudentCreated(stud=i,msg="student updated")
+except Exception as e:
+  print(e)
 
-
-
-
-# # @student_router.get("/stud",response_model=List[stud_data])
-# @student_router.get("/stud",response_model=Dict[str,stud_data])
-# async def fetching_all_stud():
-#   # return list(data.values())
-#   return data
-
-
+      
+      
 
 
 
