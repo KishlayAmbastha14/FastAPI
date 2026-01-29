@@ -308,4 +308,42 @@ if not is_filled:
 else:
     print("✅ Success: Form is complete")
 
-print(f"Result of all(): {is_filled}")
+# print(f"Result of all(): {is_filled}")
+
+
+projects = [
+    {"title": "RAG Chatbot", "tech": ["Python", "LangChain", "FastAPI"], "status": "completed"},
+    {"title": "Portfolio Web", "tech": ["React", "Vite", "Tailwind"], "status": "in-progress"},
+    {"title": "Crop Recommendation", "tech": ["Python", "ML", "Scikit-learn"], "status": "completed"},
+    {"title": "Discord Bot", "tech": ["Python", "Discord.py"], "status": "completed"}
+]
+
+print(projects)
+
+def is_compeleted(num):
+  new_num = num.copy()
+  if new_num['status'] == "completed":
+    return new_num
+
+def is_python(num):
+  new_num = num.copy()
+  for n in new_num:
+    if n.find("Python"):
+     return new_num
+    
+result = list(filter(is_compeleted,projects))
+# print(result)
+ans = list(map(is_python,result))
+# print(ans)
+
+python_completed_titles = [p for p in projects if p['status'] == 'completed' and 'Python' in p['tech']]
+# print(python_completed_titles)
+
+
+## SET
+skills_i_have = {"Python", "FastAPI", "ML"} 
+job_requirements = {"Python", "React", "NodeJS"}
+
+print(skills_i_have & job_requirements)
+print(skills_i_have - job_requirements)
+
