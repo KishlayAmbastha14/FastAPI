@@ -7,6 +7,6 @@ wheels/
 *.egg-info
 
 # Virtual environments
-.venv
+# .venv
 
 # revision/path_query_revise.py
