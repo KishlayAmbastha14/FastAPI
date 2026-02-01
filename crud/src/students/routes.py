@@ -1,5 +1,4 @@
 from fastapi import FastAPI,HTTPException,Query,Path
-from typing import List,Literal,Optional,Dict,Annotated
 import json
 from fastapi import APIRouter
 from .schemas import StudentsData,update_stud_data,StudentCreated
@@ -8,16 +7,6 @@ from .schemas import StudentsData,update_stud_data,StudentCreated
 app = FastAPI()
 
 student_router = APIRouter()
-
-# try:
-#   def load_students():
-#     with open("data.json","r") as file:
-#       return json.load(file)
-
-# except Exception as e:
-#   print(e)
-# data = load_students()
-
 
 db : list[StudentsData] = []
 
@@ -32,8 +21,8 @@ async def particular_stu(id:int=Path(ge=0,le=100,description="provide me student
   for stu in db:
     if stu.id == id:
       return stu
-    else: 
-      return {"message":"no student_with this id is present"}
+    
+  raise HTTPException(status_code = 404, detail = "no students id is found ")
 
 ## ------------- POST -----------
 @student_router.post("/create",response_model = StudentCreated,tags=['CREATE'])
@@ -42,20 +31,36 @@ async def posting_stud(student1:StudentsData) -> StudentCreated:
   return StudentCreated(student=student1,msg="Student inserted")
 
 
-@student_router.put("/update/{stu_id}",response_model = update_stud_data,tags=['UPDATE'])
-try:
-  async def updating_stud(stud_id:int,stud:StudentsData) -> update_stud_data:
-    for i in db:
-      if i.id == stud.id:
-        i.name = stud.name
-        i.age = stud.age
-        i.course = stud.course
-        i.email = stud.email
-        return StudentCreated(stud=i,msg="student updated")
-except Exception as e:
-  print(e)
-
+@student_router.put("/update/{stu_id}",response_model = StudentCreated,tags=['UPDATE'])
+async def updating_stud(stu_id:int,stud:update_stud_data):
+    try:
+      for i in db:
+        if i.id == stu_id:
+          i.name = stud.name
+          i.age = stud.age
+          i.course = stud.course
+          i.email = stud.email
+          # return {"stu":i,"msg":"student updated"}
+          return StudentCreated(student=i,msg="student updated")
       
+      raise HTTPException(status_code = 404, detail = "student not found")
+    except Exception as e:
+      print(f"Error{e}")
+      raise HTTPException(status_code=500, detail="Internal Server Error")
+    
+@student_router.delete("/delete_student/{id}",response_model = StudentCreated, tags=["DELETE"])
+async def student_delete(id:int=Path(ge=0,le=100,summary="Delete a student by ID",
+    description="Removes a student from the database and returns the deleted data.")):
+  for stud in db:
+    if stud.id == id:
+      deleted_student = stud
+      db.remove(stud)
+      return StudentCreated(student=deleted_student,msg="this students is deleted")
+    
+  raise HTTPException(status_code=404, detail=f"student with {id}  is not there")
+
+
+
       
 
 

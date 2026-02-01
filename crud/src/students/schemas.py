@@ -11,12 +11,15 @@ class StudentsData(BaseModel):
     course: str 
     email: str
 
+
+
 # PATCH -- partial updte hoga iha to hame optional dena hoga
 class update_stud_data(BaseModel):
   name:Optional[str] = None
   age:Optional[int] = None
   course:Optional[str] = None
   email:Optional[str] = None
+
 
 class StudentCreated(BaseModel):
    student : StudentsData
