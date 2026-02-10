@@ -1,23 +1,38 @@
 ## ye mera database se connection rkhega and usse baat krega with an api 
-from sqlalchemy import create_engine 
-from sqlalchemy.orm import sessionmaker, declarative_base
-from core.config import config
+# from sqlalchemy import create_engine 
+# from sqlalchemy.orm import sessionmaker, declarative_base
 
+
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import declarative_base
+
+from config import settings
+from fastapi import Depends
 
 ## engine se DB k connnection 
 # try:
-engine = create_engine(
-    config.DATABASE_URL,
-    pool_pre_ping = True
-  )
-
-
-## SESSION FACTORY
-SessionLocal = sessionmaker(
-    bind = engine,
-    autocommit = False,
-    autoflush = False
+engine = create_async_engine(
+  settings.DATABASE_URL,
+  echo = True,
+  pool_size = 5,
+  max_overflow = 10
 )
 
-Base = declarative_base()
+# SEESION MAKING
+AsyncSessionLocal = async_sessionmaker(
+  engine,
+  expire_on_commit = False
+)
 
+async def get_db():
+  async with AsyncSessionLocal() as session:
+    try:
+      yield session
+    finally:
+      await session.close()
+
+
+
+Base = declarative_base()

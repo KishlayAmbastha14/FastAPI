@@ -1,5 +1,0 @@
-here i used this first is this 
-- go with asyncpg its best and fast to go with postgresql
-- kyuki ye async hai where as 
-- psycopg2 ye sync hai joki block hoo jta hai 
-

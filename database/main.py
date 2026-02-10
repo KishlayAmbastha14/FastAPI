@@ -13,7 +13,25 @@ def get_db():
     yield db
   finally:
     db.close()
-  
+
+# def get_db():
+#   db = SessionLocal()
+#   try: 
+#     yield db
+#   finally:
+#     db.close()
+
+# from sqlalchemy.ext.asyncio import AsyncSession
+# from fastapi import Depends
+
+# async def get_db() -> AsyncSession:
+#   async with AsyncSessionLocal() as session():
+#     try:
+#       yield session
+#     finally:
+#       await session.close()
+
+
 @app.post("/user_post",response_model = schemas.UserResponse)
 async def create_user(user:schemas.UserCreate,
                       db : Session = Depends(get_db)):

@@ -12,6 +12,7 @@ class Item(BaseModel):
   description: str | None = None
   price: float
   tax: float | None = None
+  
 
 @app.put("/query_params/{item_id}")
 async def querying_paraming(item_id:Annotated[int,Path(title="enter the item_id",ge=1,le=100)],

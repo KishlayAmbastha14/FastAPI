@@ -19,3 +19,5 @@ class Item(BaseModel):
 async def fuction_item(item_id:int,item:Annotated[Item,Body(emded=True)]):
   results = {"item_id":item_id,"items":item}
   return results
+
+  
