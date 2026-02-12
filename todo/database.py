@@ -6,7 +6,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import declarative_base
+
 
 from config import settings
 from fastapi import Depends
@@ -35,4 +35,3 @@ async def get_db():
 
 
 
-Base = declarative_base()
