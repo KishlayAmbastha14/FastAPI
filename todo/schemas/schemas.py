@@ -1,7 +1,7 @@
 from pydantic import BaseModel,ConfigDict
 from datetime import date,datetime
 from typing import Optional,Annotated
-import uuid
+from uuid import UUID
 
 class BookBase(BaseModel):
   title : str
@@ -24,6 +24,7 @@ class BookUpdate(BaseModel):
 
 class BookModel(BookBase):
   # uid : uuid.UUID
+  # uid : UUID
   uid : str
   created_at : datetime
   updated_at : datetime
