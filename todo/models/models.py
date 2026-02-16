@@ -20,8 +20,6 @@ class Book(Base):
   published_date = Column(Date,nullable=True)
   created_at = Column(DateTime,server_default=func.now())
   updated_at = Column(DateTime,server_default = func.now(),onupdate=func.now())
-
-
-def __repr__(self):
-  return f"<Book(title='{self.title}',author='{self.author}')>"
+  def __repr__(self):
+    return f"<Book(title='{self.title}',author='{self.author}')>"
 

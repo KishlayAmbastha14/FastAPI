@@ -9,7 +9,7 @@ class BookBase(BaseModel):
   publisher : str
   language : str
   page_count : int
-  publish_date : date
+  published_date : date
 
 class BookCreate(BookBase):
   pass
@@ -20,7 +20,7 @@ class BookUpdate(BaseModel):
   publisher: Optional[str] = None
   language : Optional[str] = 'English'
   page_count : Optional[int] = None
-  publish_date : Optional[date] = None
+  published_date : Optional[date] = None
 
 class BookModel(BookBase):
   # uid : uuid.UUID

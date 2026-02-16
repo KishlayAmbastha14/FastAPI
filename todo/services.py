@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select,desc
 from sqlalchemy import text
-from schemas.schemas import BookBase,BookCreate,BookUpdate,BookModel
-from models.models import Book
+from .schemas.schemas import BookBase,BookCreate,BookUpdate,BookModel
+from .models.models import Book
 
 
 
@@ -40,21 +40,24 @@ class BookService:
     return new_book
   
   async def update_book(self,book_id:str,book_update:BookUpdate,db:AsyncSession):
-    book_to_update = self.get_particular_books(book_id,db)
+    book_to_update = await self.get_particular_books(book_id,db)
     if book_to_update is not None:
       update_data_dict = book_update.model_dump()
       for k,v in update_data_dict.items():
         setattr(book_to_update,k,v)
       await db.commit()
+      await db.refresh(book_to_update)
       return book_to_update
     else:
-      None
+      return None
 
   async def delete_book(self,book_id:str,db:AsyncSession):
-    book_to_delete = self.get_particular_books(book_id,db)
+    book_to_delete = await self.get_particular_books(book_id,db)
     if book_to_delete is not None:
       await db.delete(book_to_delete)
       await db.commit()
-      await db.refresh()
+      return {}
+    else: 
+      return None
       
 
