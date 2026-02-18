@@ -19,7 +19,9 @@ class GetTodo(BaseModel):
 ## SCHEMA FOR POST
 class PostTodo(BaseModel):
   post : Todo
+  
   msg : str
+  api_count : int
 
 class UpdateTodo(BaseModel):
   name : Optional[str] = None

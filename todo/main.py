@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from .database import init_db
+from todo.core.database import init_db
 # from .routers import book_router
 from .routers import book_router
+from fastapi.middleware.cors import CORSMiddleware
 
 # {
 #   "title": "NLP",
@@ -26,6 +27,14 @@ app = FastAPI(
     description="Simple Book CRUD practice project",
     version="1.0.0",
     lifespan=lifespan
+)
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(book_router,

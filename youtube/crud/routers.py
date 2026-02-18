@@ -1,4 +1,4 @@
-from fastapi import FastAPI,Path,Query,APIRouter,HTTPException,Response
+from fastapi import FastAPI,Path,Query,APIRouter,HTTPException,Response,Request
 from typing import List
 from .models import Todo,PostTodo,GetTodo,UpdateTodo,UpdateTodoReturn,DeleteTodo
 
@@ -20,9 +20,11 @@ async def mesage():
   return {"msg":"hello to crud"}
 
 @todo_router.post("/create",tags=["POST"],response_model=PostTodo)
-async def creating_post(todo:Todo) -> PostTodo:
+async def creating_post(request:Request , todo:Todo) -> PostTodo:
   db.append(todo)
-  return PostTodo(post=todo, msg="data is stored in db")
+  return PostTodo(post=todo, 
+                  msg="data is stored in db",
+                  api_count = request.app.state.request_count)
 
 
 @todo_router.get("/todos",tags=["GET"]) 
