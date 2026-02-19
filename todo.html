@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Book CRUD App</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 8px;
+    }
+
+    button {
+      padding: 8px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+    }
+
+    .add-btn {
+      background: #007bff;
+      color: #fff;
+      grid-column: span 3;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background: #007bff;
+      color: white;
+    }
+
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    .update-btn {
+      background: #28a745;
+      color: white;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📚 Book CRUD App</h1>
+
+  <div class="container">
+
+    <!-- ADD BOOK FORM -->
+    <form id="bookForm">
+      <input type="text" id="title" placeholder="Title" required />
+      <input type="text" id="author" placeholder="Author" required />
+      <input type="text" id="publisher" placeholder="Publisher" required />
+      <input type="text" id="language" placeholder="Language" value="English" />
+      <input type="number" id="page_count" placeholder="Pages" />
+      <input type="date" id="published_date" />
+
+      <button class="add-btn" type="submit">➕ Add Book</button>
+    </form>
+
+    <!-- BOOK LIST -->
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Publisher</th>
+          <th>Language</th>
+          <th>Pages</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="bookTable"></tbody>
+    </table>
+
+  </div>
+
+  <script>
+    const API_URL = "http://127.0.0.1:8000/api/todo";
+    
+
+    // Load books on page load
+    document.addEventListener("DOMContentLoaded", loadBooks);
+
+    async function loadBooks() {
+      const res = await fetch(API_URL);
+      const books = await res.json();
+
+      const table = document.getElementById("bookTable");
+      table.innerHTML = "";
+
+      books.forEach(book => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${book.title}</td>
+          <td>${book.author}</td>
+          <td>${book.publisher}</td>
+          <td>${book.language}</td>
+          <td>${book.page_count}</td>
+          <td>
+            <button class="update-btn" onclick="updateBook('${book.uid}')">Update</button>
+            <button class="delete-btn" onclick="deleteBook('${book.uid}')">Delete</button>
+          </td>
+        `;
+
+        table.appendChild(row);
+      });
+    }
+
+    // ADD BOOK
+    document.getElementById("bookForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        title: title.value,
+        author: author.value,
+        publisher: publisher.value,
+        language: language.value,
+        page_count: Number(page_count.value),
+        published_date: published_date.value
+      };
+
+      await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      e.target.reset();
+      loadBooks();
+    });
+
+
+    // DELETE BOOK
+    async function deleteBook(uid) {
+      if (!confirm("Are you sure?")) return;
+
+      await fetch(`${API_URL}/${uid}`, {
+        method: "DELETE"
+      });
+
+      loadBooks();
+    }
+
+    // UPDATE BOOK (simple prompt based)
+    async function updateBook(uid) {
+      const newTitle = prompt("Enter new title:");
+      if (!newTitle) return;
+
+      await fetch(`${API_URL}/${uid}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: newTitle })
+      });
+
+      loadBooks();
+    }
+  </script>
+
+</body>
+</html>
