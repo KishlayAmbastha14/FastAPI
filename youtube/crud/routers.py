@@ -2,6 +2,8 @@ from fastapi import FastAPI,Path,Query,APIRouter,HTTPException,Response,Request
 from typing import List
 from .models import Todo,PostTodo,GetTodo,UpdateTodo,UpdateTodoReturn,DeleteTodo
 
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 app = FastAPI(title="PRACTISE TODO APP WITHOUT DB")
 
@@ -12,6 +14,7 @@ app = FastAPI(title="PRACTISE TODO APP WITHOUT DB")
 
 todo_router = APIRouter()
 
+limiter = Limiter(key_func=get_remote_address)
 
 db : List[Todo] = []
 
@@ -28,7 +31,8 @@ async def creating_post(request:Request , todo:Todo) -> PostTodo:
 
 
 @todo_router.get("/todos",tags=["GET"]) 
-async def getting_todos():
+@limiter.limit("2/minute")
+async def getting_todos(request:Request):
   try: 
     if not db:
       return {"msg":"no data is available"}

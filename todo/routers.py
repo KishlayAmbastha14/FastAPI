@@ -1,16 +1,24 @@
 from fastapi import APIRouter,Depends,HTTPException,status
 from sqlalchemy.ext.asyncio import AsyncSession
 from .schemas.schemas import BookBase,BookUpdate,BookModel
-
 from todo.core.database import get_db
 from typing import List
 from .services import BookService
 
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from fastapi import Request
+
+
+
 book_router = APIRouter()
 book_service = BookService()
 
+limiter = Limiter(key_func=get_remote_address)
+
 @book_router.get("/",response_model=List[BookModel])
-async def get_all_books(db:AsyncSession = Depends(get_db)):
+@limiter.limit("2/minute")
+async def get_all_books(request:Request , db:AsyncSession = Depends(get_db)):
   books = await book_service.get_all_books(db)
   return books
 
