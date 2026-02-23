@@ -66,3 +66,12 @@ backend-project/
  Refresh tokens
 
  Advanced validation
+
+
+## What I know that  How does OAuth2 Password Flow work internally?
+
+- Client sends username/password to token endpoint
+- Server verifies credentials
+- Server generates access token
+- Client sends token in Authorization header
+- Protected endpoints validate token
