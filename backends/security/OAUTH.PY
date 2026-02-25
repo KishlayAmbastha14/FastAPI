@@ -27,12 +27,13 @@ fake_users_db = {
 def fake_hash_password(password:str):
   return "fakehashed"+password
 
-oauth_scheme_2 = OAuth2PasswordBearer(tokenURL='token')
+oauth_scheme_2 = OAuth2PasswordBearer(tokenUrl='token')
 
 class User(BaseModel):
-  name: str
+  username: str
   email: str
   full_name : str | None = None
+  disabled : bool | None = None
 
 class UserInDB(User):
   hashed_password : str
@@ -53,7 +54,7 @@ async def get_current_user(token:Annotated[str,Depends(oauth_scheme_2)]):
     raise HTTPException(
       status_code=status.HTTP_401_UNAUTHORIZED,
       detail = "Not AUTHORIZED",
-      headers = {"WWW-AUTHENTICATE":"BEARER"})
+      headers = {"WWW-Authenticate": "Bearer"})
   return user
 
 async def get_current_active_user(current_user:Annotated[User,Depends(get_current_user)]):
@@ -72,7 +73,7 @@ async def login(form_data:Annotated[OAuth2PasswordRequestForm,Depends()]):
   if not hashed_password == user.hashed_password:
     raise HTTPException(status_code=400,detail="incorrect username or password")
   
-  return {"access_token":user.username,"Token_type":"bearer"}
+  return {"access_token":user.username,"token_type":"bearer"}
 
 
 @app.get("/users/me")
